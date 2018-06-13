@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <title>Pokemon Explorer</title>
+
+    <script>
+
+      function processPokemonList(list) {
+
+        $('#pokemonList').show();
+        $('#pokemonLoading').hide();
+
+        let $pokemonList = $("#pokemonList");
+
+        for (let p of list.results) {
+          $pokemonList.append(`<option value="${p.url}">${p.name}</option>`);
+        }
+
+      }
+
+      function processChoice(event) {
+
+          $('#pokemonLoading').show();
+          $('#pokemonInfo').hide();
+          $('#pokemonSprite').attr('src', '');
+
+          let selectedURL = $('#pokemonList').val();
+
+          $.getJSON(selectedURL, data => processPokemon(data));
+
+      }
+
+      function processPokemon(pokemonData) {
+
+        $('#pokemonLoading').hide();
+        $('#pokemonInfo').show();
+
+          console.log(pokemonData);
+
+          $('#pokemonName').html(pokemonData.name);
+
+          $('#pokemonSprite').attr('src', pokemonData.sprites.front_default);
+
+          let types = '';
+          for (let t of pokemonData.types) {
+              types += `<span class="badge badge-primary mr-2">${t.type.name}</span>`;
+          }
+          $('#pokemonTypes').html(types);
+
+      }
+
+      function pageLoad() {
+
+          $('#pokemonList').hide();
+          $('#pokemonInfo').hide();
+
+          $.getJSON("https://stevebirtles.github.io/psd-api-activity/listcache.json", list => processPokemonList(list));
+
+          $('#pokemonList').on('change', event => processChoice(event));
+
+      }
+
+    </script>
+
+  </head>
+  <body class="bg-dark" onload="pageLoad()">
+
+    <div class="container bg-white p-4 text-center">
+
+      <h1>Pokemon Explorer</h1>
+
+      <div class="form-group">
+        <select id="pokemonList" class="form-control"></select>
+      </div>
+
+      <div id="pokemonInfo">
+        <h3 id="pokemonName" class="text-uppercase"></h3>
+        <img id="pokemonSprite" src="">
+        <div id="pokemonTypes"></div>
+      </div>
+
+    <div>
+
+    <div id="pokemonLoading">Loading...</div>
+
+  </body>
+</html>
