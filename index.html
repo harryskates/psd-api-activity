@@ -59,7 +59,7 @@
           $('#pokemonList').hide();
           $('#pokemonInfo').hide();
 
-          $.getJSON("http://pokeapi.co/api/v2/pokemon?limit=1000", list => processPokemonList(list));
+          $.getJSON("https://pokeapi.co/api/v2/pokemon?limit=1000", list => processPokemonList(list));
 
           $('#pokemonList').on('change', event => processChoice(event));
 
